@@ -504,4 +504,4 @@ if __name__ == "__main__":
         )
 
     print("Model loaded from:", MODEL_PATH)
-    app.run(debug=True, port=int(os.getenv("PORT", "5001")))
+    app.run(debug=True, port=int(os.getenv("PORT", "5002")))
