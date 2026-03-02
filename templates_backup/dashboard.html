@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% set title = "Dashboard" %}
+{% block content %}
+<section class="card">
+  <h1>Analytics Dashboard</h1>
+  <p class="muted">Your transaction insights from SQLite history.</p>
+
+  <div class="about-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+    <div class="about-box"><h3>Total</h3><div style="font-size:28px;font-weight:900">{{ summary.total }}</div></div>
+    <div class="about-box"><h3>Fraud</h3><div style="font-size:28px;font-weight:900;color:var(--danger)">{{ summary.fraud }}</div></div>
+    <div class="about-box"><h3>Safe</h3><div style="font-size:28px;font-weight:900;color:var(--ok)">{{ summary.safe }}</div></div>
+  </div>
+
+  <div class="grid" style="margin-top:14px;">
+    <div class="card">
+      <h2>Fraud by Hour</h2>
+      <canvas id="hourChart"></canvas>
+    </div>
+    <div class="card">
+      <h2>Fraud by Device</h2>
+      <canvas id="deviceChart"></canvas>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const byHour = {{ summary.by_hour|tojson }};
+  const hourLabels = byHour.map(x => x.hour);
+  const hourVals = byHour.map(x => x.n);
+
+  new Chart(document.getElementById("hourChart"), {
+    type: "bar",
+    data: { labels: hourLabels, datasets: [{ label: "Fraud Count", data: hourVals }] }
+  });
+
+  const byDevice = {{ summary.by_device|tojson }};
+  const devLabels = byDevice.map(x => x.new_device === 1 ? "New" : "Old");
+  const devVals = byDevice.map(x => x.n);
+
+  new Chart(document.getElementById("deviceChart"), {
+    type: "pie",
+    data: { labels: devLabels, datasets: [{ label: "Fraud Count", data: devVals }] }
+  });
+</script>
+{% endblock %}

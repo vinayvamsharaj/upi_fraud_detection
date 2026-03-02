@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% set title = "Register" %}
+{% block content %}
+<section class="card">
+  <h1>Create Account</h1>
+  {% if error %}<div class="result fraud"><div class="result-status">⚠️ <span>{{ error }}</span></div></div>{% endif %}
+  <form method="POST" class="form">
+    <label>Username <input name="username" required></label>
+    <label>Password <input type="password" name="password" minlength="4" required></label>
+    <button class="btn primary" type="submit">Register</button>
+    <a class="btn ghost" href="{{ url_for('login') }}">Back to Login</a>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% set title = "Admin" %}
+{% block content %}
+<section class="card">
+  <h1>Admin Panel</h1>
+  <p class="muted">Users + latest 50 checks (all users).</p>
+
+  <h2>Users</h2>
+  <div class="table">
+    <div class="row head">
+      <div>ID</div><div>Username</div><div>Admin</div><div>Created</div>
+    </div>
+    {% for u in users %}
+      <div class="row">
+        <div>{{ u.id }}</div>
+        <div>{{ u.username }}</div>
+        <div>{{ "Yes" if u.is_admin == 1 else "No" }}</div>
+        <div class="muted">{{ u.created_at }}</div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <h2 style="margin-top:14px;">Latest Checks</h2>
+  <div class="table">
+    <div class="row head">
+      <div>User</div><div>Time</div><div>Amount</div><div>Hour</div><div>Device</div><div>Count</div><div>Fraud%</div><div>Label</div>
+    </div>
+    {% for c in checks %}
+      <div class="row">
+        <div>{{ c.username }}</div>
+        <div class="muted">{{ c.created_at }}</div>
+        <div>₹{{ "%.2f"|format(c.amount) }}</div>
+        <div>{{ c.hour }}</div>
+        <div>{{ "New" if c.new_device == 1 else "Old" }}</div>
+        <div>{{ c.transaction_count }}</div>
+        <div><b>{{ c.fraud_prob }}%</b></div>
+        <div class="{{ 'danger' if c.label == 1 else 'ok' }}">{{ "Fraud" if c.label == 1 else "Safe" }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

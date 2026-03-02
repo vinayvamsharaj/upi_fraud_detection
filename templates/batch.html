@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% set title = "UPI Fraud Detection - Batch CSV" %}
+
+{% block content %}
+  <section class="card">
+    <h1>Batch Fraud Detection (CSV)</h1>
+    <p class="muted">
+      Upload a CSV with columns: <code>amount</code>, <code>hour</code>, <code>new_device</code>, <code>transaction_count</code>
+    </p>
+
+    <form method="POST" enctype="multipart/form-data" class="form">
+      <input type="file" name="file" accept=".csv" required>
+      <button class="btn primary" type="submit">Upload & Predict</button>
+      <a class="btn ghost" href="{{ url_for('download_batch') }}">Download Last Results</a>
+      <a class="navlink" href="{{ url_for('batch') }}">Batch</a>
+    </form>
+
+    {% if error %}
+      <div class="result fraud" style="margin-top:12px;">
+        <div class="result-status">⚠️ <span>{{ error }}</span></div>
+      </div>
+    {% endif %}
+  </section>
+
+  <section class="card" style="margin-top:14px;">
+    <h2>Preview Results</h2>
+    <p class="muted small">Showing up to first 200 rows.</p>
+
+    {% if results %}
+      <div class="table">
+        <div class="row head">
+          {% for k in results[0].keys() %}
+            <div>{{ k }}</div>
+          {% endfor %}
+        </div>
+
+        {% for r in results %}
+          <div class="row">
+            {% for v in r.values() %}
+              <div class="muted">{{ v }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty">No batch results yet.</div>
+    {% endif %}
+  </section>
+{% endblock %}

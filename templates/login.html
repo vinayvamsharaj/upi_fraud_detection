@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% set title = "Login" %}
+{% block content %}
+<section class="card">
+  <h1>Login</h1>
+  <p class="muted">Use your account. Default admin: <b>admin</b> / <b>admin123</b></p>
+  {% if error %}<div class="result fraud"><div class="result-status">⚠️ <span>{{ error }}</span></div></div>{% endif %}
+  <form method="POST" class="form">
+    <label>Username <input name="username" required></label>
+    <label>Password <input type="password" name="password" required></label>
+    <button class="btn primary" type="submit">Login</button>
+    <a class="btn ghost" href="{{ url_for('register') }}">Create Account</a>
+  </form>
+</section>
+{% endblock %}

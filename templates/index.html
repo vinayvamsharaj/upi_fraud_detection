@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% set title = "UPI Fraud Detection - Home" %}
+
+{% block content %}
+  <section class="hero">
+    <div>
+      <h1>Detect suspicious UPI transactions in seconds.</h1>
+      <p class="muted">
+        Enter transaction details and get a prediction with a fraud probability meter.
+      </p>
+    </div>
+    <div class="badge">
+      <div class="badge-title">Model Status</div>
+      <div class="badge-value">Loaded ✅</div>
+      <div class="badge-sub">Local Server • 127.0.0.1</div>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Check Transaction</h2>
+      <p class="muted small">Fill the details below and click “Check Fraud”.</p>
+
+      <form method="POST" class="form">
+        <label>
+          Amount (₹)
+          <input type="number" name="amount" step="0.01" min="0" placeholder="e.g., 499.00" required>
+        </label>
+
+        <label>
+          Hour (0 - 23)
+          <input type="number" name="hour" min="0" max="23" placeholder="e.g., 14" required>
+        </label>
+
+        <label>
+          Device Type
+          <select name="new_device" required>
+            <option value="0">Old Device</option>
+            <option value="1">New Device</option>
+          </select>
+        </label>
+
+        <label>
+          Transactions Today
+          <input type="number" name="transaction_count" min="0" placeholder="e.g., 3" required>
+        </label>
+
+        <button class="btn primary" type="submit">Check Fraud</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Result</h2>
+      <p class="muted small">Prediction and fraud probability will appear here.</p>
+
+      {% if result %}
+        <div class="result {{ label }}">
+          <div class="result-top">
+            <div class="result-status">
+              {% if label == "fraud" %}⚠️{% else %}✅{% endif %}
+              <span>{{ result }}</span>
+            </div>
+            <div class="pill">{{ prob }}%</div>
+          </div>
+
+          <div class="meter">
+            <div class="meter-bar" style="width: {{ prob }}%;"></div>
+          </div>
+
+          <div class="result-hint">
+            {% if label == "fraud" %}
+              This transaction looks risky. Consider OTP verification / blocking and manual review.
+            {% else %}
+              Transaction appears normal based on the model’s learned patterns.
+            {% endif %}
+          </div>
+        </div>
+      {% else %}
+        <div class="empty">No prediction yet. Submit the form to test a transaction.</div>
+      {% endif %}
+
+      <div class="tips">
+        <h3>Quick Tips</h3>
+        <ul>
+          <li>High amount + odd hour + new device + many transactions → higher risk.</li>
+          <li>Keep your dataset balanced (fraud vs non-fraud) for better accuracy.</li>
+          <li>In real systems, add features like IP, location, merchant, velocity checks.</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <section class="card history">
+    <div class="history-head">
+      <h2>Recent Checks</h2>
+      <p class="muted small">Last 10 predictions (saved temporarily while server runs).</p>
+    </div>
+
+    {% if history and history|length > 0 %}
+      <div class="table">
+        <div class="row head">
+          <div>Time</div>
+          <div>Amount</div>
+          <div>Hour</div>
+          <div>Device</div>
+          <div>Count</div>
+          <div>Fraud %</div>
+          <div>Status</div>
+        </div>
+
+        {% for h in history %}
+          <div class="row">
+            <div class="muted">{{ h.time }}</div>
+            <div>₹{{ "%.2f"|format(h.amount) }}</div>
+            <div>{{ h.hour }}</div>
+            <div>{{ h.device }}</div>
+            <div>{{ h.count }}</div>
+            <div><b>{{ h.prob }}%</b></div>
+            <div class="{{ 'danger' if 'Fraud' in h.status else 'ok' }}">{{ h.status }}</div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="rowbtns">
+  <button type="button" class="btn ghost" onclick="fillSafe()">Fill Safe Example</button>
+  <button type="button" class="btn ghost" onclick="fillFraud()">Fill Fraud Example</button>
+  <button class="btn ghost" type="button" onclick="clearHistory()">Clear</button>
+</div>
+    {% else %}
+      <div class="empty">No history yet.</div>
+    {% endif %}
+  </section>
+{% endblock %}

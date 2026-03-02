@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Explain Prediction</title>
+</head>
+<body style="font-family: Arial; background:#111; color:white;">
+
+<h1>Explain Fraud Prediction</h1>
+
+<form method="POST">
+    Amount: <input type="number" name="amount" required><br><br>
+
+    Hour (0-23): <input type="number" name="hour" required><br><br>
+
+    Device:
+    <select name="new_device">
+        <option value="0">Old Device</option>
+        <option value="1">New Device</option>
+    </select><br><br>
+
+    Transactions Today:
+    <input type="number" name="transaction_count" required><br><br>
+
+    <button type="submit">Explain</button>
+</form>
+
+{% if explanation %}
+    <h2>Result: {{ explanation.pred_label }}</h2>
+    <p>Fraud Probability: {{ explanation.prob }}%</p>
+
+    <h3>Reasons:</h3>
+    <ul>
+    {% for r in explanation.reasons %}
+        <li>{{ r }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+</body>
+</html>

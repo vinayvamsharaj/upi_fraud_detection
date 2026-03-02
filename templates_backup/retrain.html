@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% set title = "Retrain Model" %}
+{% block content %}
+<section class="card">
+  <h1>Retrain Model (Admin)</h1>
+  <p class="muted">Upload labeled CSV to retrain model and update model.pkl safely (backup included).</p>
+
+  {% if message %}<div class="result safe"><div class="result-status">✅ <span>{{ message }}</span></div></div>{% endif %}
+  {% if error %}<div class="result fraud"><div class="result-status">⚠️ <span>{{ error }}</span></div></div>{% endif %}
+
+  <form method="POST" enctype="multipart/form-data" class="form">
+    <input type="file" name="file" accept=".csv" required>
+    <button class="btn primary" type="submit">Upload & Retrain</button>
+  </form>
+
+  <div class="note">
+    CSV must include: <code>amount</code>, <code>hour</code>, <code>new_device</code>, <code>transaction_count</code> and a label column like <code>fraud</code>.
+  </div>
+</section>
+{% endblock %}

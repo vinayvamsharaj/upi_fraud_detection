@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% set title = "UPI Fraud Detection - About" %}
+
+{% block content %}
+  <section class="card">
+    <h1>About This Project</h1>
+    <p class="muted">
+      This mini project predicts whether a UPI transaction is fraudulent using a machine learning model.
+      The web application is built using Flask and a trained scikit-learn model saved as <code>model.pkl</code>.
+    </p>
+
+    <div class="about-grid">
+      <div class="about-box">
+        <h3>Tech Stack</h3>
+        <ul>
+          <li>Python • Flask</li>
+          <li>scikit-learn • joblib</li>
+          <li>SQLite • pandas</li>
+          <li>HTML • CSS • JavaScript</li>
+        </ul>
+      </div>
+
+      <div class="about-box">
+        <h3>Input Features</h3>
+        <ul>
+          <li>Amount</li>
+          <li>Hour of Transaction</li>
+          <li>New/Old Device</li>
+          <li>Transactions Count Today</li>
+        </ul>
+      </div>
+
+      <div class="about-box">
+        <h3>How It Works</h3>
+        <ol>
+          <li>User enters transaction details</li>
+          <li>Model predicts fraud (0/1)</li>
+          <li>App shows result + probability meter</li>
+          <li>History saved into SQLite</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Model Evaluation:</b>
+      {% if metrics %}
+        <div style="margin-top:8px;">
+          <div>Accuracy: <b>{{ metrics.accuracy }}%</b> (label column: <code>{{ metrics.label_col }}</code>)</div>
+          <div style="margin-top:6px;">
+            TP: <b>{{ metrics.tp }}</b> • TN: <b>{{ metrics.tn }}</b> • FP: <b>{{ metrics.fp }}</b> • FN: <b>{{ metrics.fn }}</b>
+          </div>
+        </div>
+      {% else %}
+        <div style="margin-top:8px;">
+          Could not compute accuracy automatically.
+          Make sure <code>upi_data.csv</code> exists with columns:
+          <code>amount</code>, <code>hour</code>, <code>new_device</code>, <code>transaction_count</code> and a label column (e.g. <code>fraud</code>).
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

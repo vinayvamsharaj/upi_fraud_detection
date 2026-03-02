@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{{ title if title else "UPI Fraud Detection" }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div class="brand">
+        <div class="logo">₹</div>
+        <div>
+          <div class="brand-title">UPI Fraud Detection</div>
+          <div class="brand-sub">Mini Project • ML + Flask</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="navlink" href="{{ url_for('home') }}">Home</a>
+        <a class="navlink" href="{{ url_for('about') }}">About</a>
+        <button id="themeBtn" class="btn ghost" type="button" aria-label="Toggle theme">🌙</button>
+        <nav class="nav">
+  {% if user %}
+    <a class="navlink" href="{{ url_for('home') }}">Home</a>
+    <a class="navlink" href="{{ url_for('dashboard') }}">Dashboard</a>
+    <a class="navlink" href="{{ url_for('batch') }}">Batch</a>
+    <a class="navlink" href="{{ url_for('about') }}">About</a>
+    {% if user.is_admin == 1 %}
+      <a class="navlink" href="{{ url_for('admin') }}">Admin</a>
+      <a class="navlink" href="{{ url_for('retrain') }}">Retrain</a>
+    {% endif %}
+    <a class="navlink" href="{{ url_for('logout') }}">Logout ({{ user.username }})</a>
+  {% else %}
+    <a class="navlink" href="{{ url_for('login') }}">Login</a>
+    <a class="navlink" href="{{ url_for('register') }}">Register</a>
+  {% endif %}
+  <button id="themeBtn" class="btn ghost" type="button">🌙</button>
+</nav>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    {% block content %}{% endblock %}
+    <footer class="footer">
+      <div>© {{ 2026 }} UPI Fraud Detection • Built with Flask</div>
+    </footer>
+  </main>
+
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
